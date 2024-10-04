@@ -1,0 +1,43 @@
+# Ignorar archivos de configuración de IntelliJ IDEA y otros entornos de JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ignorar carpetas de compilación
+/out/
+/build/
+
+# Ignorar archivos relacionados con Maven y Gradle
+.mvn/
+target/
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.properties
+
+# Ignorar archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos relacionados con el uso de bibliotecas específicas
+lib/
+*.jar
+
+# Archivos y carpetas de configuración del entorno
+*.log
+*.class
+
+# Ignorar archivos de configuración de IntelliJ específicos del proyecto
+workspace.xml
+tasks.xml
+usage.statistics.xml
+shelf/
+
+# Ignorar archivos temporales y de backup
+*.swp
+*.tmp
+*.bak
+*.old
+
+# Ignorar archivos de configuración de ejecución
+run/

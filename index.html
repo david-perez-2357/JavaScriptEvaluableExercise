@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicios UD2</title>
+    <link rel="icon" href="safa_mini.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .alertContainer > div:first-child {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body class="m-0 mb-5">
+    <div class="w-100 border-bottom  shadow p-5 gap-3 d-flex justify-content-center align-items-center flex-column">
+        <div class="d-flex justify gap-3 justify-content-center align-items-center">
+            <img src="safa_mini.png" style="width: 50px">
+            <h2 class="m-0">Ejercicios Javascript UD2</h2>
+        </div>
+
+<!--        <ul class="list-group">-->
+<!--            <li class="list-group-item"><b>Nombre: </b> David Pérez Fernandez</li>-->
+<!--            <li class="list-group-item"><b>Curso: </b> 2º DAW</li>-->
+<!--            <li class="list-group-item"><b>Asignatura: </b> Desarrollo web en entorno cliente</li>-->
+<!--        </ul>-->
+
+        <ul class="list-group p-2 list-group-horizontal-md d-md-grid align-content-center" style="grid-template-columns: 1fr 1fr 1fr;">
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Nombre</div>
+                    David Pérez Fernández
+                </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Curso</div>
+                    2º DAW
+                </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Asignatura</div>
+                    Desarrollo web en entorno cliente
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <main class="p-sm-5 p-3 pt-5 w-100 bg-light">
+        <h1 class="mb-3">Ejercicios</h1>
+        <div class="btn-group mb-5" role="group" aria-label="Basic outlined example">
+            <a href="#Ejercicio1" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 1
+            </a>
+            <a href="#Ejercicio2" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 2
+            </a>
+            <a href="#Ejercicio3" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 3
+            </a>
+            <a href="#Ejercicio4" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 4
+            </a>
+            <a href="#Ejercicio5" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 5
+            </a>
+            <a href="#Ejercicio6" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 6
+            </a>
+            <a href="#Ejercicio7" type="button" class="btn btn-outline-primary">
+                <div class="d-none d-lg-inline">Ejercicio</div> 7
+            </a>
+        </div>
+
+        <div class="d-flex flex-column gap-5">
+            <div class="card w-100" id="Ejercicio1">
+                <div class="card-header bg-primary-subtle">
+                    <h5 class="card-title">Ejercicio 1</h5>
+                    <h6 class="card-subtitle text-body-secondary">Validación y Manipulación de Frases en JavaScript</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="w-100">
+                        <label for="ejercicio1Input" class="form-label mb-2">Escriba aquí su frase:</label>
+                        <div class="d-flex gap-3">
+                            <input id="ejercicio1Input" type="text"  class="form-control">
+                            <button class="btn btn-primary" onclick="exercise1()">Ejecutar</button>
+                        </div>
+
+                        <div class="form-text" id="ejercicio1InputInfo">
+                            La frase debe tener al menos 5 palabras
+                        </div>
+                    </div>
+                    <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio1Results"></div>
+                </div>
+            </div>
+
+            <div class="card w-100" id="Ejercicio2">
+                <div class="card-header bg-primary-subtle">
+                    <h5 class="card-title">Ejercicio 2</h5>
+                    <h6 class="card-subtitle text-body-secondary">Filtrado y Búsqueda de Palabras en JavaScript</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="w-100">
+                        <label for="ejercicio2Input" class="form-label mb-2">Escriba aquí su frase:</label>
+                        <div class="d-flex gap-3">
+                            <input id="ejercicio2Input" type="text"  class="form-control">
+                            <button class="btn btn-primary" onclick="exercise2()">Ejecutar</button>
+                        </div>
+
+                        <div class="form-text" id="ejercicio2InputInfo">
+                            Inserte al menos 7 palabras variadas
+                        </div>
+                    </div>
+
+                    <div class="d-none mt-3 pt-3">
+                        <h5>Lista de palabras</h5>
+                        <div class="border d-flex rounded flex-wrap w-100" id="ejercicio2WordList">
+                        </div>
+
+                        <div class="input-group mt-3">
+                            <input type="text" class="form-control" placeholder="Buscar palabra" aria-label="Buscar palabra" aria-describedby="button-addon2" id="ejercicio2Search">
+                            <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="exercise2SearchWord()"><i class="bi bi-search"></i></button>
+                        </div>
+
+                        <div class="form-text" id="ejercicio2SearchInfo">
+                            La palabra debe tener al menos 5 caracteres
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio2Results"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</body>
+<script src="exercises.js"></script>
+</html>
