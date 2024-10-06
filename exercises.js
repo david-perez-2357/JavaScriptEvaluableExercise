@@ -145,6 +145,14 @@ function excludeSameValues(array1, array2) {
     return differenceArrays(unionArrays(array1, array2), intersectionArrays(array1, array2));
 }
 
+function removeAccents(string) {
+    return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function getAlphabeticCharacters(string) {
+    return string.replace(/[^a-zA-Z]/g, '');
+}
+
 //-------------------- EXERCISES --------------------//
 function exercise1() {
     const phrase = inputFor(1).value;
@@ -455,6 +463,26 @@ function exercise5() {
     alertContainerFor(5).classList.remove('d-none');
 }
 
+function exercise6() {
+    const text = inputFor(6).value;
+    const formattedText = getAlphabeticCharacters(removeAccents(text.toLowerCase()));
+    const isPalindrome = formattedText === formattedText.split('').reverse().join('');
+
+    validateInput(text !== '', inputFor(6));
+
+    if (text === '') {
+        return;
+    }
+
+    if (isPalindrome) {
+        alertContainerFor(6).innerHTML = AlertSuccess('Resultado', `El texto "${text}" es un palíndromo`, 'bi-check-circle-fill');
+    }else {
+        alertContainerFor(6).innerHTML = AlertError('Resultado',`El texto "${text}" no es un palíndromo`, 'bi-x-circle-fill');
+    }
+
+    alertContainerFor(6).classList.remove('d-none');
+}
+
 //-------------------- EVENT LISTENERS --------------------//
 inputFor(1).addEventListener('input', function (event) {
     resetElementClasses(event.target, 'form-control');
@@ -469,6 +497,16 @@ inputFor(2).addEventListener('input', function (event) {
 searchWordInput.addEventListener('input', function (event) {
     resetElementClasses(event.target, 'form-control');
     searchWordInputInfo.classList.remove('text-danger');
+});
+
+inputFor(5).addEventListener('input', function (event) {
+    resetElementClasses(event.target, 'form-control');
+    inputInfoFor(5).classList.remove('text-danger');
+});
+
+inputFor(6).addEventListener('input', function (event) {
+    resetElementClasses(event.target, 'form-control');
+    inputInfoFor(6).classList.remove('text-danger');
 });
 
 //--------------------------------------------------------//
