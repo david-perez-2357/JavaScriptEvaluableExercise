@@ -329,9 +329,18 @@ function exercise3SaveStudent() {
 
     }
 
+    exercise3UpdateAverage();
+
     if(students.length >= minStudents) {
         exercise3Modal.hide();
     }
+}
+
+function exercise3UpdateAverage() {
+    const average = students.reduce((acc, student) => acc + parseInt(student.grade), 0) / students.length;
+    const averageElement = document.getElementById('Ejercicio3Average');
+
+    averageElement.innerText = average.toFixed(2);
 }
 
 function exercise3SearchStudent() {
@@ -349,11 +358,17 @@ function exercise3SearchStudent() {
         return;
     }
 
+    resetElementClasses(searchStudentInput, 'form-control');
+
     if (searchStudentGrade) {
         alertContainerFor(3).innerHTML = AlertSuccess('Alumno encontrado', `${searchStudentName} con una nota de ${searchStudentGrade.grade}`, 'bi-person-check-fill')
             + alertContainerFor(3).innerHTML;
         alertContainerFor(3).classList.remove('d-none');
     } else {
+        // Seacrh others alerts in modal body and remove them
+        modalBody.querySelectorAll('.alert').forEach((alert) => {
+            alert.remove();
+        });
         modalBody.insertAdjacentHTML('afterbegin', AlertError('Alumno no encontrado', `${searchStudentName} no se encuentra en la lista de alumnos`, 'bi-person-x-fill'));
         inputStudentName.value = searchStudentName;
         exercise3Modal.show();
