@@ -129,6 +129,22 @@ function sortObjectArrayByKey(array, key) {
     return array.sort((a, b) => a[key].localeCompare(b[key]));
 }
 
+function unionArrays(array1, array2) {
+    return array1.concat(array2);
+}
+
+function intersectionArrays(array1, array2) {
+    return array1.filter((value) => array2.includes(value));
+}
+
+function differenceArrays(array1, array2) {
+    return array1.filter((value) => !array2.includes(value));
+}
+
+function excludeSameValues(array1, array2) {
+    return differenceArrays(unionArrays(array1, array2), intersectionArrays(array1, array2));
+}
+
 //-------------------- EXERCISES --------------------//
 function exercise1() {
     const phrase = inputFor(1).value;
@@ -374,6 +390,65 @@ function exercise3SearchStudent() {
         inputStudentName.value = searchStudentName;
         exercise3Modal.show();
     }
+}
+
+function exercise4() {
+    const multiplesOfTwo = [];
+    const multiplesOfThree = [];
+
+    for (let i = 1; i <= 30; i++) {
+        if (i % 2 === 0) {
+            multiplesOfTwo.push(i);
+        }
+
+        if (i % 3 === 0) {
+            multiplesOfThree.push(i);
+        }
+    }
+
+    // Union of multiples of two and three
+    const union = unionArrays(multiplesOfTwo, multiplesOfThree);
+
+    // Intersection of multiples of two and three
+    const intersection = intersectionArrays(multiplesOfTwo, multiplesOfThree);
+
+    // Difference of multiples of two and three
+    const difference = differenceArrays(multiplesOfTwo, multiplesOfThree);
+
+    // Difference of multiples of three and two
+    const difference2 = differenceArrays(multiplesOfThree, multiplesOfTwo);
+
+    // Exclude same values of multiples of two and three
+    const exclude = excludeSameValues(multiplesOfTwo, multiplesOfThree);
+
+    alertContainerFor(4).innerHTML =
+        AlertSuccess('Union', union.join(', '), 'bi-emoji-laughing-fill')
+        + AlertSuccess('Intersección', intersection.join(', '), 'bi-emoji-laughing-fill')
+        + AlertSuccess('Diferencia con multiplos de dos', difference.join(', '), 'bi-emoji-laughing-fill')
+        + AlertSuccess('Diferencia con multiplos de tres', difference2.join(', '), 'bi-emoji-laughing-fill')
+        + AlertSuccess('Excluir iguales', exclude.join(', '), 'bi-emoji-laughing-fill');
+
+    alertContainerFor(4).classList.remove('d-none');
+}
+
+function exercise5() {
+    const numbers = inputFor(5).value;
+    const numbersArray = numbers.split(',').map((number) => parseInt(number));
+    const allNumbers = numbersArray.every((number) => number > 0);
+
+    validateInput(allNumbers, inputFor(5));
+    toggleTextColor(inputInfoFor(5), allNumbers);
+
+    // Only numbers that appear once
+    const uniqueNumbers = numbersArray.filter((number) => numbersArray.indexOf(number) === numbersArray.lastIndexOf(number));
+    const numberSum = uniqueNumbers.reduce((prev, number) => prev + number, 0);
+    const average = (numberSum / uniqueNumbers.length).toFixed(2);
+
+    alertContainerFor(5).innerHTML =
+        AlertSuccess('Numeros únicos', uniqueNumbers.join(', '), 'bi-inboxes-fill')
+        + AlertSuccess('Promedio', average, 'bi-globe');
+
+    alertContainerFor(5).classList.remove('d-none');
 }
 
 //-------------------- EVENT LISTENERS --------------------//

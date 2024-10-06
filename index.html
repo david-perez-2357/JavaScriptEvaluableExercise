@@ -14,7 +14,7 @@
         }
     </style>
 </head>
-<body class="m-0 mb-5">
+<body class="m-0">
     <div class="w-100 border-bottom  shadow p-5 gap-3 d-flex justify-content-center align-items-center flex-column">
         <div class="d-flex justify gap-3 justify-content-center align-items-center">
             <img src="safa_mini.png" style="width: 50px">
@@ -49,7 +49,7 @@
         </ul>
     </div>
 
-    <main class="p-sm-5 p-3 pt-5 w-100 bg-light">
+    <main class="p-sm-5 p-3 pt-5 w-100 bg-light pb-5">
         <h1 class="mb-3">Ejercicios</h1>
         <div class="btn-group mb-5" role="group" aria-label="Basic outlined example">
             <a href="#Ejercicio1" type="button" class="btn btn-outline-primary">
@@ -171,6 +171,40 @@
                         </div>
                     </div>
                     <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio3Results"></div>
+                </div>
+            </div>
+
+            <div class="card w-100" id="Ejercicio4">
+                <div class="card-header bg-primary-subtle">
+                    <h5 class="card-title">Ejercicio 4</h5>
+                    <h6 class="card-subtitle text-body-secondary">Operaciones de Conjuntos Numéricos: Múltiplos de 2 y 3</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="w-100">
+                        <button class="btn btn-primary" onclick="exercise4()">Ejecutar</button>
+                    </div>
+                    <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio4Results"></div>
+                </div>
+            </div>
+
+            <div class="card w-100" id="Ejercicio5">
+                <div class="card-header bg-primary-subtle">
+                    <h5 class="card-title">Ejercicio 5</h5>
+                    <h6 class="card-subtitle text-body-secondary">Números Únicos y Cálculo de la Media</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="w-100">
+                        <label for="ejercicio2Input" class="form-label mb-2">Escriba aquí el conjunto de números:</label>
+                        <div class="d-flex gap-3">
+                            <input id="ejercicio5Input" type="text"  class="form-control">
+                            <button class="btn btn-primary" onclick="exercise5()">Ejecutar</button>
+                        </div>
+
+                        <div class="form-text" id="ejercicio5InputInfo">
+                            Inserte números separados por comas
+                        </div>
+                    </div>
+                    <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio5Results"></div>
                 </div>
             </div>
         </div>
