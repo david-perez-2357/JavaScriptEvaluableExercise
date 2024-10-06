@@ -288,6 +288,7 @@ function exercise3SaveStudent() {
     const inputStudentName = document.getElementById('ejercicio3StudentName');
     const inputStudentGrade = document.getElementById('ejercicio3StudentGrade');
     const studentAddButton = document.getElementById('Ejercicio3AddStudent');
+    const searchStudentInput = document.getElementById('ejercicio3Search');
     const studentNameIsValid = validateStudentName(inputStudentName.value);
     const studentGradeIsValid = validateStudentGrade(inputStudentGrade.value);
 
@@ -323,10 +324,11 @@ function exercise3SaveStudent() {
             appendToTable([student.name, student.grade], studentTable);
         });
 
-        alertContainerFor(3).innerHTML = AlertSuccess('Alumno agregado', `${students[students.length - 1].name} con una nota de ${students[students.length - 1].grade}`, 'bi-person-plus-fill')
+        const studentAdded = students.find((student) => student.name === searchStudentInput.value);
+        alertContainerFor(3).innerHTML = AlertSuccess('Alumno agregado', `${studentAdded.name} con una nota de ${studentAdded.grade}`, 'bi-person-plus-fill')
             + alertContainerFor(3).innerHTML;
         alertContainerFor(3).classList.remove('d-none');
-
+        searchStudentInput.value = '';
     }
 
     exercise3UpdateAverage();
@@ -350,7 +352,6 @@ function exercise3SearchStudent() {
     const searchStudentGrade = students.find((student) => student.name === searchStudentName);
     const modalBody = document.getElementById('Ejercicio3ModalBody');
     const inputStudentName = document.getElementById('ejercicio3StudentName');
-    searchStudentInput.value = '';
 
     validateInput(searchStudentNameIsValid, searchStudentInput);
 
