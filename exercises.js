@@ -10,6 +10,16 @@ const AlertSuccess = (title, text, icon='bi-chat-left-dots-fill') => {
             </div>`;
 }
 
+const AlertError = (title, text, icon='bi-chat-left-dots-fill') => {
+    return `<div class="alert alert-danger alert-dismissible fade show gap-3 d-flex align-items-center" role="alert">
+                <i class="bi ${icon}"></i>
+                <div>
+                    <b>${title}:</b> <span id="resultado1">${text}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+}
+
 const WordItem = (word) => {
     return `<div class="p-2 flex-grow-1 border overflow-x-auto">${word}</div>`
 }
@@ -22,7 +32,14 @@ const alertContainerFor = (exerciseNumber) => document.getElementById(`Ejercicio
 // EXERCISE 2
 const searchWordInput = document.getElementById('ejercicio2Search');
 const searchWordInputInfo = document.getElementById('ejercicio2SearchInfo');
-const wordClasses = {};
+let wordClasses = {};
+
+// EXERCISE 3
+const exercise3MainContent = document.getElementById('Ejercicio3Content');
+const exercise3Modal = new bootstrap.Modal(document.getElementById('Ejercicio3Modal'));
+const minStudents = 4;
+const students = [];
+const studentTable = document.getElementById('Ejercicio3StudentTable');
 
 //-------------------- FUNCTIONS --------------------//
 function validatePhrase(phrase, minimumWords) {
@@ -93,6 +110,25 @@ function sortWords(words) {
     return words;
 }
 
+function emptyTable(table) {
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+}
+
+function appendToTable(data, table) {
+    const row = table.insertRow();
+    data.forEach((cell) => {
+        const cellElement = row.insertCell();
+        cellElement.innerText = cell;
+    });
+}
+
+function sortObjectArrayByKey(array, key) {
+    return array.sort((a, b) => a[key].localeCompare(b[key]));
+}
+
 //-------------------- EXERCISES --------------------//
 function exercise1() {
     const phrase = inputFor(1).value;
@@ -143,6 +179,14 @@ function exercise2() {
 
     // Sort words by alphabetical order, not counting case
     words = sortWords(words);
+
+    // Empty word classes
+    wordClasses = {};
+
+    // Reset search word input
+    searchWordInput.value = '';
+    resetElementClasses(searchWordInput, 'form-control');
+    searchWordInputInfo.classList.remove('text-danger');
 
     validateInput(validatePhrase(phrase, minimumWords), inputFor(2));
     toggleTextColor(inputInfoFor(2), inputIsValid);
@@ -229,6 +273,91 @@ function exercise2SearchWord() {
 
     searchWordInput.value = '';
     alertContainerFor(2).classList.remove('d-none');
+}
+
+function validateStudentName(name) {
+    return name.length > 0;
+}
+
+function validateStudentGrade(grade) {
+    return grade >= 0 && grade <= 10 && grade !== '';
+}
+
+
+function exercise3SaveStudent() {
+    const inputStudentName = document.getElementById('ejercicio3StudentName');
+    const inputStudentGrade = document.getElementById('ejercicio3StudentGrade');
+    const studentAddButton = document.getElementById('Ejercicio3AddStudent');
+    const studentNameIsValid = validateStudentName(inputStudentName.value);
+    const studentGradeIsValid = validateStudentGrade(inputStudentGrade.value);
+
+    validateInput(studentNameIsValid, inputStudentName);
+    validateInput(studentGradeIsValid, inputStudentGrade);
+
+    if (!studentNameIsValid || !studentGradeIsValid) {
+        return;
+    }
+
+    resetElementClasses(inputStudentName, 'form-control');
+    resetElementClasses(inputStudentGrade, 'form-control');
+
+    students.push({
+        name: inputStudentName.value,
+        grade: inputStudentGrade.value
+    });
+
+    inputStudentName.value = '';
+    inputStudentGrade.value = '';
+
+    if (students.length === minStudents) {
+        sortObjectArrayByKey(students, 'name').forEach((student) => {
+            appendToTable([student.name, student.grade], studentTable);
+        });
+
+        studentAddButton.classList.add('d-none');
+        exercise3MainContent.classList.remove('d-none');
+    }else if (students.length > minStudents) {
+        emptyTable(studentTable);
+
+        sortObjectArrayByKey(students, 'name').forEach((student) => {
+            appendToTable([student.name, student.grade], studentTable);
+        });
+
+        alertContainerFor(3).innerHTML = AlertSuccess('Alumno agregado', `${students[students.length - 1].name} con una nota de ${students[students.length - 1].grade}`, 'bi-person-plus-fill')
+            + alertContainerFor(3).innerHTML;
+        alertContainerFor(3).classList.remove('d-none');
+
+    }
+
+    if(students.length >= minStudents) {
+        exercise3Modal.hide();
+    }
+}
+
+function exercise3SearchStudent() {
+    const searchStudentInput = document.getElementById('ejercicio3Search');
+    const searchStudentName = searchStudentInput.value;
+    const searchStudentNameIsValid = validateStudentName(searchStudentName);
+    const searchStudentGrade = students.find((student) => student.name === searchStudentName);
+    const modalBody = document.getElementById('Ejercicio3ModalBody');
+    const inputStudentName = document.getElementById('ejercicio3StudentName');
+    searchStudentInput.value = '';
+
+    validateInput(searchStudentNameIsValid, searchStudentInput);
+
+    if (!searchStudentNameIsValid) {
+        return;
+    }
+
+    if (searchStudentGrade) {
+        alertContainerFor(3).innerHTML = AlertSuccess('Alumno encontrado', `${searchStudentName} con una nota de ${searchStudentGrade.grade}`, 'bi-person-check-fill')
+            + alertContainerFor(3).innerHTML;
+        alertContainerFor(3).classList.remove('d-none');
+    } else {
+        modalBody.insertAdjacentHTML('afterbegin', AlertError('Alumno no encontrado', `${searchStudentName} no se encuentra en la lista de alumnos`, 'bi-person-x-fill'));
+        inputStudentName.value = searchStudentName;
+        exercise3Modal.show();
+    }
 }
 
 //-------------------- EVENT LISTENERS --------------------//

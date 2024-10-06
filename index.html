@@ -133,9 +133,72 @@
                     <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio2Results"></div>
                 </div>
             </div>
+
+            <div class="card w-100" id="Ejercicio3">
+                <div class="card-header bg-primary-subtle">
+                    <h5 class="card-title">Ejercicio 3</h5>
+                    <h6 class="card-subtitle text-body-secondary">Gestión de Notas de Alumnos con Registro Dinámico</h6>
+                </div>
+                <div class="card-body p-4">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Ejercicio3Modal" id="Ejercicio3AddStudent">
+                        Añadir alumnos
+                    </button>
+
+                    <div class="w-100 d-flex column-gap-5 flex-wrap align-items-center text-center flex-column d-none" id="Ejercicio3Content">
+                        <h3 class="mb-3">Registro de Alumnos</h3>
+                        <table class="table table-bordered table-striped" style="max-width: 600px" id="Ejercicio3StudentTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Nota</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex flex-column">
+                            <label for="ejercicio3Search" class="form-label fs-5">Buscar alumno</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Buscar alumno" aria-label="Buscar alumno" aria-describedby="button-addon2" id="ejercicio3Search">
+                                <button class="btn btn-outline-primary" type="button" id="button-addon3" onclick="exercise3SearchStudent()"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio3Results"></div>
+                </div>
+            </div>
         </div>
 
     </main>
+
+    <!-- Modal exercise 3 -->
+    <div class="modal fade " id="Ejercicio3Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Alumno</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="Ejercicio3ModalBody">
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <input type="text" class="form-control" placeholder="Nombre" aria-label="Username" id="ejercicio3StudentName">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-mortarboard-fill"></i></span>
+                        <input type="number" min="0" max="10" step="0.1" class="form-control" placeholder="Nota" id="ejercicio3StudentGrade">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="exercise3SaveStudent()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="exercises.js"></script>
 </html>
