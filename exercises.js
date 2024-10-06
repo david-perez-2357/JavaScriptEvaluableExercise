@@ -439,6 +439,10 @@ function exercise5() {
     validateInput(allNumbers, inputFor(5));
     toggleTextColor(inputInfoFor(5), allNumbers);
 
+    if (!allNumbers) {
+        return;
+    }
+
     // Only numbers that appear once
     const uniqueNumbers = numbersArray.filter((number) => numbersArray.indexOf(number) === numbersArray.lastIndexOf(number));
     const numberSum = uniqueNumbers.reduce((prev, number) => prev + number, 0);
