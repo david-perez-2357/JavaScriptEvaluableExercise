@@ -28,6 +28,7 @@ const WordItem = (word) => {
 class tableCrud {
     constructor(tableElement, headers = [], data = []) {
         this.tableElement = tableElement;
+        this.tbodyElement = tableElement.createTBody();
         this.data = data;
         this.createHeader(headers);
 
@@ -52,25 +53,29 @@ class tableCrud {
         return this.data.filter((data) => data[key].includes(value));
     }
 
-    emptyData() {
-        this.data = [];
+    emptyTable() {
         while (this.tableElement.rows.length > 1) {
             this.tableElement.deleteRow(1);
         }
     }
 
+    emptyData() {
+        this.data = [];
+        this.emptyTable();
+    }
+
     addData(data) {
         this.data.push(data);
         // Append data to tbody
-        const row = this.tableElement.insertRow();
+        const row = this.tbodyElement.insertRow();
         Object.values(data).forEach((cell) => {
             const cellElement = row.insertCell();
-            cellElement.innerText
+            cellElement.innerText = cell;
         });
     }
 
     renderData() {
-        this.emptyData();
+        this.emptyTable();
         this.data.forEach((data) => {
             this.addData(data);
         });
@@ -78,7 +83,6 @@ class tableCrud {
 
     sortDataByKey(key) {
         this.data.sort((a, b) => a[key].localeCompare(b[key]));
-        this.emptyData();
         this.renderData();
     }
 
@@ -406,11 +410,7 @@ function exercise3SaveStudent() {
         grade: inputStudentGrade.value
     });
 
-    inputStudentName.value = '';
-    inputStudentGrade.value = '';
-
     if (studentCrud.data.length === minStudents) {
-        studentCrud.createHeader(['Nombre', 'Nota']);
         studentAddButton.classList.add('d-none');
         exercise3MainContent.classList.remove('d-none');
 
@@ -421,13 +421,15 @@ function exercise3SaveStudent() {
         //     appendToTable([student.name, student.grade], studentTable);
         // });
         studentCrud.sortDataByKey('name');
-
-        const studentAdded = studentCrud.searchOneDataByKey('name', searchStudentInput.value);
+        const studentAdded = studentCrud.searchOneDataByKey('name', inputStudentName.value);
         alertContainerFor(3).innerHTML = AlertSuccess('Alumno agregado', `${studentAdded.name} con una nota de ${studentAdded.grade}`, 'bi-person-plus-fill')
             + alertContainerFor(3).innerHTML;
         alertContainerFor(3).classList.remove('d-none');
         searchStudentInput.value = '';
     }
+
+    inputStudentName.value = '';
+    inputStudentGrade.value = '';
 
     exercise3UpdateAverage();
 
