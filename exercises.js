@@ -189,25 +189,6 @@ function sortWords(words) {
     return words;
 }
 
-// function emptyTable(table) {
-//     while (table.rows.length > 1) {
-//         table.deleteRow(1);
-//     }
-//
-// }
-//
-// function appendToTable(data, table) {
-//     const row = table.insertRow();
-//     data.forEach((cell) => {
-//         const cellElement = row.insertCell();
-//         cellElement.innerText = cell;
-//     });
-// }
-//
-// function sortObjectArrayByKey(array, key) {
-//     return array.sort((a, b) => a[key].localeCompare(b[key]));
-// }
-
 function unionArrays(array1, array2) {
     return array1.concat(array2);
 }
@@ -415,11 +396,6 @@ function exercise3SaveStudent() {
         exercise3MainContent.classList.remove('d-none');
 
     }else if (studentCrud.data.length > minStudents) {
-        // emptyTable(studentTable);
-        //
-        // sortObjectArrayByKey(students, 'name').forEach((student) => {
-        //     appendToTable([student.name, student.grade], studentTable);
-        // });
         studentCrud.sortDataByKey('name');
         const studentAdded = studentCrud.searchOneDataByKey('name', inputStudentName.value);
         alertContainerFor(3).innerHTML = AlertSuccess('Alumno agregado', `${studentAdded.name} con una nota de ${studentAdded.grade}`, 'bi-person-plus-fill')
