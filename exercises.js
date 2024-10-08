@@ -24,6 +24,83 @@ const WordItem = (word) => {
     return `<div class="p-2 flex-grow-1 border overflow-x-auto">${word}</div>`
 }
 
+//-------------------- CLASSES ----------------------//
+class tableCrud {
+    constructor(tableElement, headers = [], data = []) {
+        this.tableElement = tableElement;
+        this.tbodyElement = tableElement.createTBody();
+        this.data = data;
+        this.createHeader(headers);
+
+        this.renderData();
+    }
+
+    createHeader(headers) {
+        // Create header row inside thead
+        const headerRow = this.tableElement.createTHead().insertRow();
+        headers.forEach((header) => {
+            const headerElement = document.createElement('th');
+            headerElement.innerText = header;
+            headerRow.appendChild(headerElement);
+        });
+    }
+
+    searchOneDataByKey(key, value) {
+        return this.data.find((data) => data[key] === value);
+    }
+
+    searchAllDataByKeyContains(key, value) {
+        return this.data.filter((data) => data[key].includes(value));
+    }
+
+    emptyTable() {
+        while (this.tableElement.rows.length > 1) {
+            this.tableElement.deleteRow(1);
+        }
+    }
+
+    emptyData() {
+        this.data = [];
+        this.emptyTable();
+    }
+
+    addData(data) {
+        this.data.push(data);
+        // Append data to tbody
+        const row = this.tbodyElement.insertRow();
+        Object.values(data).forEach((cell) => {
+            const cellElement = row.insertCell();
+            cellElement.innerText = cell;
+        });
+    }
+
+    renderData() {
+        this.emptyTable();
+        this.data.forEach((data) => {
+            this.addData(data);
+        });
+    }
+
+    sortDataByKey(key) {
+        this.data.sort((a, b) => a[key].localeCompare(b[key]));
+        this.renderData();
+    }
+
+    editData(index, data) {
+        this.data[index] = data;
+        this.renderData();
+    }
+
+    deleteData(index) {
+        this.data.splice(index, 1);
+        this.renderData();
+    }
+
+    filterData(callback) {
+        return this.data.filter(callback);
+    }
+}
+
 //-------------------- VARIABLES --------------------//
 const inputFor = (exerciseNumber) => document.getElementById(`ejercicio${exerciseNumber}Input`);
 const inputInfoFor = (exerciseNumber) => document.getElementById(`ejercicio${exerciseNumber}InputInfo`);
@@ -38,8 +115,10 @@ let wordClasses = {};
 const exercise3MainContent = document.getElementById('Ejercicio3Content');
 const exercise3Modal = new bootstrap.Modal(document.getElementById('Ejercicio3Modal'));
 const minStudents = 4;
-const students = [];
 const studentTable = document.getElementById('Ejercicio3StudentTable');
+const studentCrud = new tableCrud(studentTable, ['Nombre', 'Nota']);
+
+
 
 //-------------------- FUNCTIONS --------------------//
 function validatePhrase(phrase, minimumWords) {
@@ -108,25 +187,6 @@ function sortWords(words) {
     words.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
     return words;
-}
-
-function emptyTable(table) {
-    while (table.rows.length > 1) {
-        table.deleteRow(1);
-    }
-
-}
-
-function appendToTable(data, table) {
-    const row = table.insertRow();
-    data.forEach((cell) => {
-        const cellElement = row.insertCell();
-        cellElement.innerText = cell;
-    });
-}
-
-function sortObjectArrayByKey(array, key) {
-    return array.sort((a, b) => a[key].localeCompare(b[key]));
 }
 
 function unionArrays(array1, array2) {
@@ -326,44 +386,36 @@ function exercise3SaveStudent() {
     resetElementClasses(inputStudentName, 'form-control');
     resetElementClasses(inputStudentGrade, 'form-control');
 
-    students.push({
+    studentCrud.addData({
         name: inputStudentName.value,
         grade: inputStudentGrade.value
     });
 
-    inputStudentName.value = '';
-    inputStudentGrade.value = '';
-
-    if (students.length === minStudents) {
-        sortObjectArrayByKey(students, 'name').forEach((student) => {
-            appendToTable([student.name, student.grade], studentTable);
-        });
-
+    if (studentCrud.data.length === minStudents) {
         studentAddButton.classList.add('d-none');
         exercise3MainContent.classList.remove('d-none');
-    }else if (students.length > minStudents) {
-        emptyTable(studentTable);
 
-        sortObjectArrayByKey(students, 'name').forEach((student) => {
-            appendToTable([student.name, student.grade], studentTable);
-        });
-
-        const studentAdded = students.find((student) => student.name === searchStudentInput.value);
+    }else if (studentCrud.data.length > minStudents) {
+        studentCrud.sortDataByKey('name');
+        const studentAdded = studentCrud.searchOneDataByKey('name', inputStudentName.value);
         alertContainerFor(3).innerHTML = AlertSuccess('Alumno agregado', `${studentAdded.name} con una nota de ${studentAdded.grade}`, 'bi-person-plus-fill')
             + alertContainerFor(3).innerHTML;
         alertContainerFor(3).classList.remove('d-none');
         searchStudentInput.value = '';
     }
 
+    inputStudentName.value = '';
+    inputStudentGrade.value = '';
+
     exercise3UpdateAverage();
 
-    if(students.length >= minStudents) {
+    if(studentCrud.data.length >= minStudents) {
         exercise3Modal.hide();
     }
 }
 
 function exercise3UpdateAverage() {
-    const average = students.reduce((acc, student) => acc + parseInt(student.grade), 0) / students.length;
+    const average = studentCrud.data.reduce((acc, student) => acc + parseInt(student.grade), 0) / studentCrud.data.length;
     const averageElement = document.getElementById('Ejercicio3Average');
 
     averageElement.innerText = average.toFixed(2);
@@ -373,7 +425,7 @@ function exercise3SearchStudent() {
     const searchStudentInput = document.getElementById('ejercicio3Search');
     const searchStudentName = searchStudentInput.value;
     const searchStudentNameIsValid = validateStudentName(searchStudentName);
-    const searchStudentGrade = students.find((student) => student.name === searchStudentName);
+    const searchStudentGrade = studentCrud.searchOneDataByKey('name', searchStudentName);
     const modalBody = document.getElementById('Ejercicio3ModalBody');
     const inputStudentName = document.getElementById('ejercicio3StudentName');
 
