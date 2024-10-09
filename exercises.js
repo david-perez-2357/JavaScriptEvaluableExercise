@@ -479,7 +479,7 @@ function exercise4() {
     const difference2 = differenceArrays(multiplesOfThree, multiplesOfTwo);
 
     // Exclude same values of multiples of two and three
-    const exclude = excludeSameValues(multiplesOfTwo, multiplesOfThree);
+    const exclude = excludeSameValues(multiplesOfTwo, multiplesOfThree).sort((a, b) => a - b);
 
     alertContainerFor(4).innerHTML =
         AlertSuccess('Union', union.join(', '), 'bi-emoji-laughing-fill')
