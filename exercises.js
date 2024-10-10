@@ -46,11 +46,11 @@ class tableCrud {
     }
 
     searchOneDataByKey(key, value) {
-        return this.data.find((data) => data[key] === value);
+        return this.data.find((data) => data[key].toLowerCase() === value.toLowerCase());
     }
 
     searchAllDataByKeyContains(key, value) {
-        return this.data.filter((data) => data[key].includes(value));
+        return this.data.filter((data) => data[key].toLowerCase().includes(value.toLocaleLowerCase()));
     }
 
     emptyTable() {
@@ -64,21 +64,60 @@ class tableCrud {
         this.emptyTable();
     }
 
+    addNoDataInfo() {
+        const row = this.tbodyElement.insertRow();
+        const cell = row.insertCell();
+        row.classList.add('no-data');
+        cell.colSpan = this.tableElement.rows[0].cells.length;
+        cell.innerText = 'No hay datos para mostrar';
+    }
+
+    removeNoDataInfo() {
+        const noDataElement = this.tableElement.querySelector('.no-data');
+        if (noDataElement) {
+            noDataElement.remove();
+        }
+    }
+
+    checkBoxElement(checked) {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = checked;
+        checkbox.classList.add('form-check-input');
+        checkbox.classList.add('form-check-lg');
+        return checkbox;
+    }
+
     addData(data) {
+        this.removeNoDataInfo();
         this.data.push(data);
+        this.addColumnData(data);
+    }
+
+    addColumnData(data) {
         // Append data to tbody
         const row = this.tbodyElement.insertRow();
         Object.values(data).forEach((cell) => {
             const cellElement = row.insertCell();
-            cellElement.innerText = cell;
+            // If cell is a boolean, add a checkbox
+            if (typeof cell === 'boolean') {
+                cellElement.appendChild(this.checkBoxElement(cell));
+                cellElement.classList.add('task-checkbox');
+            }else {
+                cellElement.innerText = cell;
+            }
         });
     }
 
     renderData() {
         this.emptyTable();
         this.data.forEach((data) => {
-            this.addData(data);
+            this.addColumnData(data);
         });
+
+        if (this.data.length === 0) {
+            this.addNoDataInfo();
+        }
     }
 
     sortDataByKey(key) {
@@ -118,7 +157,16 @@ const minStudents = 4;
 const studentTable = document.getElementById('Ejercicio3StudentTable');
 const studentCrud = new tableCrud(studentTable, ['Nombre', 'Nota']);
 
-
+// EXERCISE 7
+const exercise7Table = document.getElementById('Ejercicio7TaskTable');
+const exercise7Modal = new bootstrap.Modal(document.getElementById('Ejercicio7Modal'));
+const exercise7ModalTitle = document.getElementById('Ejercicio7ModalTitle');
+const exercise7AddButton = document.getElementById('Ejercicio7AddTask');
+const exercise7EditButton = document.getElementById('Ejercicio7EditTask');
+const exercise7DeleteButton = document.getElementById('Ejercicio7DeleteTask');
+const exercise7TaskInput = document.getElementById('Ejercicio7Task');
+const exercise7LimitInput = document.getElementById('Ejercicio7Limit');
+const exercise7Crud = new tableCrud(exercise7Table, ['Hecho', 'Tarea', 'Límite'], []);
 
 //-------------------- FUNCTIONS --------------------//
 function validatePhrase(phrase, minimumWords) {
@@ -535,6 +583,131 @@ function exercise6() {
     alertContainerFor(6).classList.remove('d-none');
 }
 
+function exercise7ModalAddTask() {
+    exercise7AddButton.classList.remove('d-none');
+    exercise7DeleteButton.classList.add('d-none');
+    exercise7EditButton.classList.add('d-none');
+    exercise7ModalTitle.innerText = 'Añadir tarea';
+    exercise7Modal.show();
+}
+
+function exercise7ModalEditTask(selectedTask) {
+    exercise7AddButton.classList.add('d-none');
+    exercise7EditButton.classList.remove('d-none');
+    exercise7DeleteButton.classList.remove('d-none');
+    exercise7ModalTitle.innerText = 'Editar tarea';
+    exercise7TaskInput.value = selectedTask.task;
+    exercise7LimitInput.value = selectedTask.date;
+    // Set original task to modal
+    exercise7Modal._element.setAttribute('data-originalTask', selectedTask.task);
+    exercise7Modal.show();
+}
+
+function exercise7AddTask() {
+    const task = exercise7TaskInput.value;
+    const limit = exercise7LimitInput.value;
+    const noDuplicateTask = exercise7Crud.searchOneDataByKey('task', task) === undefined;
+    const taskIsValid = task !== '' && limit !== '' && noDuplicateTask;
+
+    validateInput(task !== '' && noDuplicateTask, exercise7TaskInput);
+    validateInput(limit !== '', exercise7LimitInput);
+
+    if (!taskIsValid) {
+        return;
+    }
+
+    exercise7Crud.addData({
+        done: false,
+        task: task,
+        date: limit
+    });
+
+    exercise7TaskInput.value = '';
+    exercise7LimitInput.value = '';
+    resetElementClasses(exercise7TaskInput, 'form-control');
+    resetElementClasses(exercise7LimitInput, 'form-control');
+    exercise7Modal.hide();
+
+    alertContainerFor(7).innerHTML = AlertSuccess('Tarea agregada', `La tarea "${task}" ha sido agregada`, 'bi-plus-circle-fill');
+}
+
+function exercise7EditTask() {
+    const task = exercise7TaskInput.value;
+    const limit = exercise7LimitInput.value;
+    const noDuplicateTask = exercise7Crud.searchOneDataByKey('task', task) === undefined;
+    const taskIsValid = task !== '' && limit !== '' && noDuplicateTask;
+    const originalTask = exercise7Modal._element.getAttribute('data-originalTask');
+    const selectedTask = exercise7Crud.searchOneDataByKey('task', originalTask);
+
+    validateInput(task !== '' && noDuplicateTask, exercise7TaskInput);
+    validateInput(limit !== '', exercise7LimitInput);
+
+    if (!taskIsValid) {
+        return;
+    }
+
+    const selectedTaskIndex = exercise7Crud.data.findIndex((task) => task.task === originalTask);
+    exercise7Crud.editData(selectedTaskIndex, {
+        done: selectedTask.done,
+        task: task,
+        date: limit
+    });
+
+    exercise7TaskInput.value = '';
+    exercise7LimitInput.value = '';
+    resetElementClasses(exercise7TaskInput, 'form-control');
+    resetElementClasses(exercise7LimitInput, 'form-control');
+    exercise7Modal.hide();
+
+    alertContainerFor(7).innerHTML = AlertSuccess('Tarea editada', `La tarea "${originalTask}" ha sido editada`, 'bi-pencil-fill');
+}
+
+function exercise7DeleteTask() {
+    const task = exercise7Modal._element.getAttribute('data-originalTask');
+    const selectedTask = exercise7Crud.searchOneDataByKey('task', task);
+    const selectedTaskIndex = exercise7Crud.data.findIndex((task) => task.task === selectedTask.task);
+
+    exercise7Crud.deleteData(selectedTaskIndex);
+
+    exercise7TaskInput.value = '';
+    exercise7LimitInput.value = '';
+    resetElementClasses(exercise7TaskInput, 'form-control');
+    resetElementClasses(exercise7LimitInput, 'form-control');
+    exercise7Modal.hide();
+
+    alertContainerFor(7).innerHTML = AlertSuccess('Tarea eliminada', `La tarea "${task}" ha sido eliminada`, 'bi-trash-fill');
+}
+
+function exercise7SearchTask() {
+    const searchTaskInput = document.getElementById('ejercicio7Search');
+    const searchTask = searchTaskInput.value;
+    const searchTaskIsValid = searchTask !== '';
+    const searchResults = exercise7Crud.searchOneDataByKey('task', searchTask);
+
+    validateInput(searchTaskIsValid, searchTaskInput);
+
+    if (!searchTaskIsValid) {
+        return;
+    }
+
+    // If found one equal task, edit it
+    if (searchResults) {
+        exercise7ModalEditTask(searchResults);
+        searchTaskInput.value = '';
+        resetElementClasses(searchTaskInput, 'form-control');
+    }else {
+        alertContainerFor(7).innerHTML = AlertError(`Resultado de busqueda ${searchTask}`, 'No se encontraron tareas', 'bi-x-circle-fill');
+        alertContainerFor(7).classList.remove('d-none');
+    }
+}
+
+function exercise7MarkTaskAsDone(taskElement) {
+    const taskIndex = taskElement.parentElement.parentElement.rowIndex - 1;
+    const task = exercise7Crud.data[taskIndex];
+    task.done = !task.done;
+    exercise7Crud.editData(taskIndex, task);
+}
+
 //-------------------- EVENT LISTENERS --------------------//
 inputFor(1).addEventListener('input', function (event) {
     resetElementClasses(event.target, 'form-control');
@@ -559,6 +732,23 @@ inputFor(5).addEventListener('input', function (event) {
 inputFor(6).addEventListener('input', function (event) {
     resetElementClasses(event.target, 'form-control');
     inputInfoFor(6).classList.remove('text-danger');
+});
+
+// Dynamic event listener for task table
+document.addEventListener('click', function(event) {
+    // Verifica si el click ocurrió dentro de un elemento con la clase .toggle-checkbox
+    if (event.target.closest('.task-checkbox')) {
+        const td = event.target.closest('.task-checkbox');
+
+        // Evita que el clic en el checkbox interfiera con el clic en el td
+        if (event.target.tagName !== 'INPUT') {
+            const checkbox = td.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked; // Cambia el estado del checkbox
+            exercise7MarkTaskAsDone(checkbox); // Llama a la función que marca la tarea como realizada
+        }else {
+            exercise7MarkTaskAsDone(event.target);
+        }
+    }
 });
 
 //--------------------------------------------------------//

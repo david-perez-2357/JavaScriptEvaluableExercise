@@ -12,6 +12,15 @@
         .alertContainer > div:first-child {
             margin-top: 40px;
         }
+
+        input[type="checkbox"] {
+            width: 15px;  /* Cambiar tamaño si se quiere más grande */
+            height: 15px; /* Cambiar tamaño si se quiere más grande */
+            transform: scale(1.5); /* Escala para navegadores Firefox */
+            -webkit-transform: scale(1.5); /* Escala para navegadores Webkit */
+            border: 1px solid #000; /* Bordes del checkbox */
+        }
+
     </style>
 </head>
 <body class="m-0">
@@ -219,6 +228,35 @@
                     <div class="d-flex gap-1 flex-column d-none alertContainer" id="Ejercicio6Results"></div>
                 </div>
             </div>
+
+            <div class="card w-100" id="Ejercicio7">
+                <div class="card-header bg-primary-subtle">
+                    <h5 class="card-title">Ejercicio 7</h5>
+                    <h6 class="card-subtitle text-body-secondary">Gestión de Lista de Tareas</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="w-100 d-flex column-gap-5 flex-wrap align-items-center text-center flex-column" id="Ejercicio7Content">
+                        <div class="d-flex w-100 p-3 gap-4 flex-wrap align-items-center justify-content-between" style="max-width: 600px" >
+                            <h3 class="mb-0">Gestión de tareas</h3>
+                            <button type="button" class="btn btn-primary" onclick="exercise7ModalAddTask()" id="Ejercicio7AddTaskButton">
+                                Añadir tarea
+                            </button>
+                        </div>
+
+                        <table class="table table-bordered table-striped" style="max-width: 600px" id="Ejercicio7TaskTable">
+                        </table>
+
+                        <div class="d-flex flex-column mt-3">
+                            <label for="ejercicio3Search" class="form-label fs-5 mb-1">Buscar tarea</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Buscar tarea" aria-label="Buscar alumno" aria-describedby="button-addon2" id="ejercicio7Search">
+                                <button class="btn btn-outline-primary" type="button" id="button-addon7" onclick="exercise7SearchTask()"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-1 flex-column alertContainer" id="Ejercicio7Results"></div>
+                </div>
+            </div>
         </div>
 
     </main>
@@ -233,18 +271,47 @@
                 </div>
                 <div class="modal-body" id="Ejercicio3ModalBody">
                     <div class="input-group mt-3 mb-3">
-                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <span class="input-group-text text-light-emphasis"><i class="bi bi-person-fill"></i></span>
                         <input type="text" class="form-control" placeholder="Nombre" aria-label="Username" id="ejercicio3StudentName">
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text"><i class="bi bi-mortarboard-fill"></i></span>
+                        <span class="input-group-text text-light-emphasis"><i class="bi bi-mortarboard-fill"></i></span>
                         <input type="number" min="0" max="10" step="0.1" class="form-control" placeholder="Nota" id="ejercicio3StudentGrade">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" onclick="exercise3SaveStudent()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal exercise 7 -->
+    <div class="modal fade " id="Ejercicio7Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="Ejercicio7ModalTitle">Añadir tarea</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text text-light-emphasis"><i class="bi bi-sticky-fill"></i></span>
+                        <input type="text" class="form-control" placeholder="Tarea" aria-label="Username" id="Ejercicio7Task">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text text-light-emphasis"><i class="bi bi-calendar-fill"></i></span>
+                        <input type="date" class="form-control" placeholder="Límite" id="Ejercicio7Limit">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" onclick="exercise7DeleteTask()" id="Ejercicio7DeleteTask">Eliminar</button>
+                    <button type="button" class="btn btn-primary" onclick="exercise7AddTask()" id="Ejercicio7AddTask">Añadir</button>
+                    <button type="button" class="btn btn-primary d-none" onclick="exercise7EditTask()" id="Ejercicio7EditTask">Guardar</button>
                 </div>
             </div>
         </div>
